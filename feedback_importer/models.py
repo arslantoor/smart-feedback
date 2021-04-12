@@ -18,7 +18,7 @@ class Form(models.Model):
 
 
 class Account(models.Model):
-    form_key = models.ForeignKey(Form, on_delete=models.CASCADE, default=False, null=True, blank=True, )
+    form_key = models.ForeignKey(Form, on_delete=models.CASCADE, default=True, null=True, blank=True, )
     name = models.CharField(max_length=50, default=False, null=True, blank=True)
     type = models.CharField(max_length=50, default=False, null=True, blank=True)
 
@@ -37,9 +37,6 @@ class Question(models.Model):
     status = models.CharField(max_length=10, default=False, null=True, blank=True)
     min_range = models.IntegerField(default=False, null=True, blank=True)
     max_range = models.IntegerField(default=False, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
 
 
 # class Answer(models.Model):
@@ -73,7 +70,7 @@ class Question(models.Model):
 
 
 class ActivityStream(models.Model):
-    form_key = models.ForeignKey(Form, on_delete=models.CASCADE, default=False, null=True, blank=True)
+    form_key = models.ForeignKey(Form, on_delete=models.CASCADE, default=True, null=True, blank=True)
     order_id = models.CharField(max_length=50, default=False, null=True, blank=True)
     form_id = models.IntegerField(default=False, null=True, blank=True)
     form_type = models.IntegerField(default=False, null=True, blank=True)
@@ -86,3 +83,8 @@ class ActivityStream(models.Model):
     is_form_completed = models.BooleanField(default=False, null=True, blank=True)
     form_completed_at = models.CharField(max_length=50, default=False, null=True, blank=True)
     last_touched_question_id = models.IntegerField(default=False, null=True, blank=True)
+
+class Test(models.Model):
+    field_1 = models.CharField(max_length=50, default=False, null=True, blank=True)
+    field_2 = models.CharField(max_length=50, default=False, null=True, blank=True)
+    field_3 = models.CharField(max_length=50, default=False, null=True, blank=True)

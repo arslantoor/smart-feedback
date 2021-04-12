@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Smart Feedback</title>
+</head>
+<body>
+<main>
+
+    <div class="container mt-5">
+    <!--  Import Forms   -->
+        <form action="{% url 'importer-commands' %}" method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="select_importer">Select Data Importer</label>
+                    <select id="select_importer" name="importer_type" required class="form-control">
+                        <option value="1">Forms import </option>
+                        <option value="2">Questions import </option>
+                        <option value="3">Answers import </option>
+                        <option value="4">Form Activity import </option>
+                    </select>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="url">Enter Request Url:</label>
+                    <input type="url"name="url" id="url" required class="form-control" placeholder="Enter url">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="header_key">Set Request Header Key:</label>
+                    <input type="text"name="header_key" required id="header_key" class="form-control" placeholder="Enter header Key">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="header_value">Set Request Header Value:</label>
+                    <input type="text"name="header_value" required id="header_value" class="form-control" placeholder="Enter header Value">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="param_key">Set Request Parameter Key (optional):</label>
+                    <input type="text"name="param_key" id="param_key" class="form-control" placeholder="Enter param key">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="param_value">Set Request Parameter Value (optional):</label>
+                    <input type="text"name="param_value" id="param_value" class="form-control" placeholder="Enter param value">
+                </div>
+                 <div class="form-group col-md-3">
+                    <label for="header_value"></label>
+                    <input type="submit" id="formImport" class="form-control btn-success" value="Send Import Request">
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</main>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>

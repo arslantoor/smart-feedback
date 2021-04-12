@@ -9,4 +9,4 @@ class Command(BaseCommand):
     help = 'Displays current time'
 
     def handle(self, *args, **kwargs):
-        views.import_forms()
+        views.import_forms('https://sff.coddle.de/api/v2/forms','665', 'FMJuyuC8uEbo3WxRa5aG')
