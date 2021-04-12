@@ -14,7 +14,7 @@ from django.shortcuts import render
 from django.utils import timezone
 
 from feedback_importer import models
-from feedback_importer.models import Form, Question, Test
+from feedback_importer.models import Form, Question, Test,ActivityStream
 
 
 def index(request):
@@ -37,10 +37,9 @@ def importer_commands(request):
         elif importer_type == "3":
             import_answers(url,header_key,header_value)
         elif importer_type == "4":
-            import_activity_streams(url,header_key,header_value)
+            import_activity_streams(url,header_key,header_value,param_key,param_value)
 
     return render(request, 'index.html')
-
 
 
 def import_forms(url,header_key,header_value):
@@ -70,6 +69,7 @@ def import_forms(url,header_key,header_value):
                 models.Form.objects.bulk_create(instances)
     except Exception as e:
         print("=====model insertion error==\t\t:", str(e))
+
 
 def import_questions(url,header_key,header_value):
     try:
@@ -133,8 +133,45 @@ def import_answers(url,header_key,header_value):
         print("=====model error==\t\t:", str(e))
 
 
-def import_activity_streams():
-    pass
+def import_activity_streams(url,header_key,header_value,param_key,param_value):
+    try:
+        bulk_size = 10
+        url = url
+        id = header_key
+        password = header_value
+        headers = {
+            'interface-id': id,
+            'interface-password': password
+        }
+        params= {
+            'start_date':param_key,
+            'end_date':param_value
+        }
+        json_response = requests.get(url,params, headers=headers).content
+        object = json.loads(json_response)
+        for key, value in object.items():
+            if isinstance(value, list) or isinstance(value, list):
+
+                instances = [
+                    models.ActivityStream(
+                        form_key=val.get('form_key'),
+                        order_id=val.get('order_id'),
+                        form_id=val.get('form_id'),
+                        form_type=val.get('form_type'),
+                        last_opened_at=val.get('last_opened_at'),
+                        last_opened_from_browser=val.get('last_opened_from_browser'),
+                        last_opened_from_location=val.get('last_opened_from_location'),
+                        last_opened_from_location_city=val.get('last_opened_from_location_city'),
+                        last_opened_from_location_region=val.get('last_opened_from_location_region'),
+                        last_opened_from_location_country=val.get('last_opened_from_location_country'),
+                        is_form_completed=val.get('is_form_completed'),
+                        form_completed_at=val.get('form_completed_at'),
+                        last_touched_question_id=val.get('last_touched_question_id'))
+                        for val in value
+                        ]
+                models.ActivityStream.objects.bulk_create(instances)
+    except Exception as e:
+        print("=====model error==\t\t:", str(e))
 
 
 # Testing code working on.
@@ -145,6 +182,7 @@ def orm_create(n_records):
             field_2=str(i),
             field_3=timezone.now(),
         )
+
 
 if __name__ == '__main__':
     utils.timed(orm_create)
