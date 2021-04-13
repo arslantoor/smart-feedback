@@ -56,7 +56,7 @@ def import_forms(url,header_key,header_value):
         json_response = requests.get(url, headers=headers).content
         object = json.loads(json_response)
         for key,value in object.items():
-            if isinstance(value, list) or isinstance(value, list):
+            if isinstance(value, list) or isinstance(value, dict):
                 instances = [
                     models.Form(
                         form_id = val.get('form_id'), name = val.get('name'),
@@ -66,7 +66,7 @@ def import_forms(url,header_key,header_value):
                         )
                     for val in value
                 ]
-                models.Form.objects.bulk_create(instances)
+            models.Form.objects.bulk_create(instances)
     except Exception as e:
         print("=====model insertion error==\t\t:", str(e))
 
@@ -75,11 +75,12 @@ def import_questions(url,header_key,header_value):
     try:
         bulk_size = 10
         url = url
+        instances=[]
         id = header_key
         password = header_value
 
         headers = {
-            'interface-id': str(id),
+            'interface-id': id,
             'interface-password': password
         }
         json_response = requests.get(url, headers=headers).content
@@ -87,20 +88,46 @@ def import_questions(url,header_key,header_value):
         for key, value in object.items():
             if isinstance(value, list) or isinstance(value, list):
                 instances = [
-                    models.Question(question_id =val.get('question_id'),
-                    question_label =val.get('question_label'),
-                    question_type =val.get('question_type'),
-                    parent_id =val.get('parent_id'),
-                    is_conditional_question =val.get('is_conditional_question'),
-                    is_required =val.get('is_required'),
-                    status =val.get('status'),
-                    min_range =val.get('min_range'),
-                    max_range =val.get('max_range'))
+                    models.Question(
+                        question_id =val.get('question_id'),
+                        question_label =val.get('question_label'),
+                        question_type =val.get('question_type'),
+                        parent_id =val.get('parent_id'),
+                        is_conditional_question =val.get('is_conditional_question'),
+                        is_required =val.get('is_required'),
+                        status =val.get('status'),
+                        min_range =val.get('min_range'),
+                        max_range =val.get('max_range')
+                    )
                     for val in value
                 ]
             models.Question.objects.bulk_create(instances)
     except Exception as e:
         print("=====import error==\t\t:", str(e))
+
+#  Check dictionary method from import_answer
+
+
+def print_value(value):
+    for li in value:
+        print(li.get('question_id'))
+
+
+def check_list(form):
+    for keys in form:
+        print(type(keys))
+        questions_list=keys.get('questions')
+
+
+
+def check_dict(element):
+    for keys,values in element.items():
+        for val in values:
+            print()
+            if isinstance(val, dict):
+                form=val.get('forms')
+                if isinstance(form,list):
+                    check_list(form)
 
 
 def import_answers(url,header_key,header_value):
@@ -116,18 +143,19 @@ def import_answers(url,header_key,header_value):
         json_response = requests.get(url, headers=headers).content
         json_response =json.loads(json_response)
         for obj in json_response.items():
-            for t in obj:
-                if isinstance(t,tuple):
-                    print("t1====",t)
-                elif isinstance(t, str):
-                    print("t2====",t)
-                elif isinstance(t, dict):
-                    dicRecord=t.get('result')
-                    print("t3====",dicRecord['shop_id'])
-                elif isinstance(t, int):
-                    print("t4====",t)
+            for element in obj:
+                if isinstance(element,tuple):
+                    print("t1 ====", type(element))
 
+                elif isinstance(element, dict):
+                    check_dict(element)
+                    print("t3 ====",type(element))
 
+                elif isinstance(element, str):
+                    print("t2 ====", type(element))
+
+                elif isinstance(element, int):
+                    print("t4 ====", type(element))
 
     except Exception as e:
         print("=====model error==\t\t:", str(e))
@@ -135,15 +163,15 @@ def import_answers(url,header_key,header_value):
 
 def import_activity_streams(url,header_key,header_value,param_key,param_value):
     try:
-        bulk_size = 10
         url = url
         id = header_key
         password = header_value
+
         headers = {
             'interface-id': id,
             'interface-password': password
         }
-        params= {
+        params = {
             'start_date':param_key,
             'end_date':param_value
         }
@@ -151,7 +179,6 @@ def import_activity_streams(url,header_key,header_value,param_key,param_value):
         object = json.loads(json_response)
         for key, value in object.items():
             if isinstance(value, list) or isinstance(value, list):
-
                 instances = [
                     models.ActivityStream(
                         form_key=val.get('form_key'),
@@ -161,19 +188,23 @@ def import_activity_streams(url,header_key,header_value,param_key,param_value):
                         last_opened_at=val.get('last_opened_at'),
                         last_opened_from_browser=val.get('last_opened_from_browser'),
                         last_opened_from_location=val.get('last_opened_from_location'),
-                        last_opened_from_location_city=val.get('last_opened_from_location_city'),
+                        last_opened_from_location_city=val.get('last_opened_from_location_city',None),
                         last_opened_from_location_region=val.get('last_opened_from_location_region'),
                         last_opened_from_location_country=val.get('last_opened_from_location_country'),
                         is_form_completed=val.get('is_form_completed'),
                         form_completed_at=val.get('form_completed_at'),
                         last_touched_question_id=val.get('last_touched_question_id'))
                         for val in value
-                        ]
-                models.ActivityStream.objects.bulk_create(instances)
+                    ]
+            models.ActivityStream.objects.bulk_create(instances)
     except Exception as e:
         print("=====model error==\t\t:", str(e))
 
 
+'''
+Bellow code is for testing purpose
+
+'''
 # Testing code working on.
 def orm_create(n_records):
     for i in range(0, n_records):

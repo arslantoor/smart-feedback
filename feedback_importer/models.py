@@ -19,11 +19,12 @@ class Form(models.Model):
 
 class Account(models.Model):
     form_key = models.ForeignKey(Form, on_delete=models.CASCADE, default=True, null=True, blank=True, )
-    name = models.CharField(max_length=50, default=False, null=True, blank=True)
-    type = models.CharField(max_length=50, default=False, null=True, blank=True)
+    account_id = models.CharField(max_length=50, default=False, null=True, blank=True)
+    account_name = models.CharField(max_length=50, default=False, null=True, blank=True)
+    account_password = models.CharField(max_length=50, default=False, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.account_name
 
 
 class Question(models.Model):

@@ -19,10 +19,10 @@ admin.site.register(Form, FormAdmin)
 
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('id', 'form_key', "name", "type")
+    list_display = ('id', 'form_key', "account_id", "account_name", "account_password")
     list_max_show_all = 25
     ordering = ['pk']
-    list_filter = ("name",)
+    list_filter = ("account_name",)
 
 
 admin.site.register(Account, AccountAdmin)

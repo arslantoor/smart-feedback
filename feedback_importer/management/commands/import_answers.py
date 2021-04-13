@@ -8,6 +8,6 @@ class Command(BaseCommand):
     help = 'Displays current time'
 
     def handle(self, *args, **kwargs):
-        # views.import_answers('https://sff.coddle.de/api/v3/answers/','665', 'FMJuyuC8uEbo3WxRa5aG')
+        views.import_answers('https://sff.coddle.de/api/v3/answers/','665', 'FMJuyuC8uEbo3WxRa5aG')
         # views.orm_create(5)
-        views.orm_bulk_create(5)
+        # views.orm_bulk_create(5)
