@@ -7,7 +7,7 @@ from feedback_importer import views
 from feedback_importer.models import Account
 
 class Command(BaseCommand):
-    help = 'Displays current time'
+    help = 'Import Activity Streams'
 
     def handle(self, start_date=None,end_date=None, *args, **kwargs):
 

@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from feedback_importer import views
 class Command(BaseCommand):
-    help = 'Displays current time'
+    help = 'Import Answers API'
 
     def handle(self, *args, **kwargs):
         views.import_answers('https://sff.coddle.de/api/v3/answers/','665', 'FMJuyuC8uEbo3WxRa5aG')

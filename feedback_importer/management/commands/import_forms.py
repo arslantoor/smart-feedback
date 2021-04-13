@@ -8,7 +8,7 @@ from feedback_importer import views
 from feedback_importer.models import Account
 
 class Command(BaseCommand):
-    help = 'Displays current time'
+    help = 'Import Forms API'
 
     def handle(self, *args, **kwargs):
         Accounts = Account.objects.all()
