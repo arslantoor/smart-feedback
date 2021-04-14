@@ -2,7 +2,7 @@ import json
 import requests
 from django.shortcuts import render
 from feedback_importer import models
-from feedback_importer.models import Form, Question, Test,ActivityStream
+from feedback_importer.models import Form, Question, Test,ActivityStream,Answer
 from django.utils import timezone
 from collections import defaultdict
 from django.apps import apps
@@ -157,45 +157,73 @@ def import_answers(api_request_url,api_request_header_id,api_request_header_pass
         #  Iterate over objects keys and values pairs
         for obj in json_response.items():
             for element in obj:
-                if isinstance(element,tuple):
-                    print("t1 ====", type(element))
-
-                elif isinstance(element, dict):
+                if isinstance(element, dict):
                     check_dict(element)
-                    print("t3 ====",type(element))
-
-                elif isinstance(element, str):
-                    print("t2 ====", type(element))
-
-                elif isinstance(element, int):
-                    print("t4 ====", type(element))
 
     except Exception as e:
         print("== Import Exceptions ==\t\t:", str(e))
 
 
-
-
-def print_value(value):
+def print_data(value):
     for li in value:
         print(li.get('question_id'))
 
 
 def check_list(form):
+    form_instance = []
+    question_instance = []
     for keys in form:
-        print(type(keys))
-        questions_list=keys.get('questions')
+        form_instance = [
+            models.Answer(
+                result_forms_id=keys.get('id'),
+                results_form_default_language=keys.get('form_default_language'),
+                results_ip_address=keys.get('ip_address'),
+                results_forms_cloned_from=keys.get('cloned_from'),
+                results_forms_submitted_at=keys.get('submitted_at'),
+            )
+        ]
 
+        questions_list = keys.get('questions')
+        for question in questions_list:
+            question_instance = [
+                models.Answer(
+                    results_questions_no_answer=question.get('no_answer'),
+                    results_questions_field_to_submit_on_ekomi=question.get('field_to_submit_on_ekomi'),
+                    results_questions_question_tags=question.get('question_tags'),
+                    results_questions_cloned_from=question.get('cloned_from'),
+                    results_questions_answer_value=question.get('answer_value'),
+                    results_questions_mapped_value=question.get('mapped_value'),
 
+                )
+            ]
+        models.Answer.objects.bulk_create(form_instance)
+        models.Answer.objects.bulk_create(question_instance)
 
 def check_dict(element):
+    result_instance = []
     for keys,values in element.items():
-        for val in values:
-            print()
-            if isinstance(val, dict):
-                form=val.get('forms')
+        for value in values:
+            if isinstance(value, dict):
+                result_instance = [
+                    models.Answer(
+                        result_id=value.get('id'),
+                        shop_id=value.get('shop_id'),
+                        order_id=value.get('order_id'),
+                        product_id=value.get('product_id'),
+                        review_hash=value.get('review_hash'),
+                        review_status=value.get('review_status'),
+                        is_published=value.get('is_published'),
+                        published_at=value.get('published_at'),
+                        is_withdrawn=value.get('is_withdrawn'),
+                        withdrawn_at=value.get('withdrawn_at'),
+                    )
+                ]
+                form=value.get('forms')
                 if isinstance(form,list):
                     check_list(form)
+    # create bulk operation for final instances group
+    models.Answer.objects.bulk_create(result_instance)
 
-
-
+ # '''results_questions_answer_value_option_option_id=question.get('id'),
+ #                    results_questions_answer_value_option_option_label=question.get('id'),
+ #                    results_questions_answer_value_option_linked_questions=question.get('id'),'''
