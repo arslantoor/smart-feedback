@@ -164,11 +164,6 @@ def import_answers(api_request_url,api_request_header_id,api_request_header_pass
         print("== Import Exceptions ==\t\t:", str(e))
 
 
-def print_data(value):
-    for li in value:
-        print(li.get('question_id'))
-
-
 def check_list(form):
     form_instance = []
     question_instance = []
@@ -196,8 +191,10 @@ def check_list(form):
 
                 )
             ]
-        models.Answer.objects.bulk_create(form_instance)
-        models.Answer.objects.bulk_create(question_instance)
+    # create bulk operation for final instances group
+    models.Answer.objects.bulk_create(form_instance)
+    models.Answer.objects.bulk_create(question_instance)
+
 
 def check_dict(element):
     result_instance = []
@@ -224,6 +221,7 @@ def check_dict(element):
     # create bulk operation for final instances group
     models.Answer.objects.bulk_create(result_instance)
 
- # '''results_questions_answer_value_option_option_id=question.get('id'),
- #                    results_questions_answer_value_option_option_label=question.get('id'),
- #                    results_questions_answer_value_option_linked_questions=question.get('id'),'''
+
+#                results_questions_answer_value_option_option_id=question.get('id'),
+#                results_questions_answer_value_option_option_label=question.get('id'),
+#                results_questions_answer_value_option_linked_questions=question.get('id'),

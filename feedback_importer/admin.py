@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Test, Form, Account, Question, ActivityStream, Answer
+from .models import Form, Account, Question, ActivityStream, Answer
 from django.core.serializers.json import DjangoJSONEncoder
 
 admin.site.site_header = "Smart Feedback"
@@ -47,14 +47,6 @@ class ActivityStreamAdmin(admin.ModelAdmin):
 admin.site.register(ActivityStream, ActivityStreamAdmin)
 # Register your models here.
 
-
-class TestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'field_1', "field_2", "field_3")
-    list_max_show_all = 25
-    ordering = ['pk']
-
-
-admin.site.register(Test, TestAdmin)
 
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('id', 'question_key', "result_id", "shop_id", "order_id", "product_id", "review_hash", "review_status", "is_published", "published_at", "is_withdrawn", "withdrawn_at", "result_forms_id", "results_form_default_language", "results_ip_address", "results_forms_cloned_from", "results_forms_submitted_at", "results_questions_no_answer", "results_questions_field_to_submit_on_ekomi", "results_questions_question_tags", "results_questions_cloned_from", "results_questions_answer_value", "results_questions_answer_value_option_option_id", "results_questions_answer_value_option_option_label", "results_questions_answer_value_option_linked_questions", "results_questions_mapped_value")

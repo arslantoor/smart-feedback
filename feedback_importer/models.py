@@ -83,7 +83,3 @@ class ActivityStream(models.Model):
     form_completed_at = models.CharField(max_length=50, default=False, null=True, blank=True)
     last_touched_question_id = models.IntegerField(default=False, null=True, blank=True)
 
-class Test(models.Model):
-    field_1 = models.CharField(max_length=50, default=False, null=True, blank=True)
-    field_2 = models.CharField(max_length=50, default=False, null=True, blank=True)
-    field_3 = models.CharField(max_length=50, default=False, null=True, blank=True)
